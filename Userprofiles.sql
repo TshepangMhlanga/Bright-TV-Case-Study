@@ -24,15 +24,16 @@ SELECT DISTINCT race
 FROM bright_tv.data.user_profiles;
 
 
-SELECT DISTINCT 
+SELECT COUNT(DISTINCT UserID) AS Subs,
 CASE
    WHEN race = 'other' THEN 'unknown'
    WHEN race = 'None' THEN 'unknown'
    WHEN race = ' ' THEN 'unknown'
    WHEN race IS NULL  THEN 'unknown'
-ELSE race
+ELSE race   --- keep race
 END AS ethnicity 
-FROM bright_tv.data.user_profiles;
+FROM bright_tv.data.user_profiles
+GROUP BY ethnicity;
 
 -------------------------------------------------
 ---- Province Checks
@@ -58,19 +59,26 @@ SELECT min (Age) AS min_age, -- Finding youngest user = 0
 FROM bright_tv.data.user_profiles;
 
 --------------------------------------------------
+SELECT DISTINCT Age FROM bright_tv.data.user_profiles ORDER BY Age;
 
-SELECT COUNT(DISTINCT UserID) AS subs,
-CASE  
-          WHEN Age = 0 THEN 'Infant'
-          WHEN Age BETWEEN 1 AND 12 THEN 'Kids'
-          WHEN Age BETWEEN 13 AND 19 THEN 'Teenager'
-          WHEN Age BETWEEN 20 AND 35 THEN 'Youth'
-          WHEN Age BETWEEN 36 AND 50 THEN 'Adults'
-          WHEN Age > 50 AND Age <= 60 THEN 'Elder'
-          WHEN Age > 64 THEN 'Pensioner'
-     END AS Age_group
-FROM bright_tv.data.user_profiles
-GROUP BY Age_group;
+
+DESCRIBE TABLE bright_tv.data.user_profiles;
+
+SELECT 
+  CASE  
+   
+    WHEN CAST(Age AS INT) = 0 THEN 'Infant'
+    WHEN CAST(Age AS INT) BETWEEN 1 AND 12 THEN 'Kids'
+    WHEN CAST(Age AS INT) BETWEEN 13 AND 17 THEN 'Teenager'
+    WHEN CAST(Age AS INT) BETWEEN 18 AND 35 THEN 'Youth'
+    WHEN CAST(Age AS INT) BETWEEN 36 AND 50 THEN 'Adults'
+    WHEN CAST(Age AS INT) BETWEEN 51 AND 60 THEN 'Elder'
+    WHEN CAST(Age AS INT) BETWEEN 61 AND 64 THEN 'Senior'
+    WHEN CAST(Age AS INT) >= 65 THEN 'Pensioner'
+  END AS Age_group
+FROM bright_tv.data.user_profiles;
+
+
 
 
 ----------------------------------------------------------------
